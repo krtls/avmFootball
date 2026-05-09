@@ -75,8 +75,8 @@ class PlayerShotSpeedBoard extends Component
 
         $this->cancelEditing();
 
-           // Dispatch browser event so JS can trigger the animation
-           $this->dispatch('player-saved', id: $playerId);
+        // Dispatch browser event so JS can trigger the animation
+        $this->dispatch('player-saved', id: $playerId);
     }
 
     public function deletePlayer(int $playerId): void
@@ -92,11 +92,15 @@ class PlayerShotSpeedBoard extends Component
 
     public function render(): View
     {
+        $playersQuery = Player::query()
+            ->orderByDesc('shot_speed_kmh')
+            ->orderBy('name');
+
+        $averageSpeed = Player::query()->avg('shot_speed_kmh') ?? 0;
+
         return view('livewire.player-shot-speed-board', [
-            'players' => Player::query()
-                ->orderByDesc('shot_speed_kmh')
-                ->orderBy('name')
-                ->paginate(20),
+            'players' => $playersQuery->paginate(20),
+            'averageSpeed' => $averageSpeed,
         ]);
     }
 }

@@ -5,13 +5,9 @@
         <form wire:submit="savePlayer" class="grid gap-4 md:grid-cols-3">
             <div class="md:col-span-2">
                 <label for="player-name" class="mb-1 block text-sm font-medium">Oyuncu Adı</label>
-                <input
-                    id="player-name"
-                    type="text"
-                    wire:model.live="playerName"
+                <input id="player-name" type="text" wire:model.live="playerName"
                     class="w-full rounded-md border border-neutral-300 px-3 py-2 dark:border-neutral-600 dark:bg-neutral-900"
-                    placeholder="Oyuncu adını girin"
-                >
+                    placeholder="Oyuncu adını girin">
                 @error('playerName')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
@@ -19,16 +15,10 @@
 
             <div>
                 <label for="shot-speed" class="mb-1 block text-sm font-medium">Şut Hızı (km/h)</label>
-                <input
-                    id="shot-speed"
-                    type="number"
-                    min="1"
-                    max="300"
-                    step="0.1"
+                <input id="shot-speed" type="number" min="1" max="300" step="0.1"
                     wire:model.live="shotSpeed"
                     class="w-full rounded-md border border-neutral-300 px-3 py-2 dark:border-neutral-600 dark:bg-neutral-900"
-                    placeholder="örnek: 122.4"
-                >
+                    placeholder="örnek: 122.4">
                 @error('shotSpeed')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
@@ -57,53 +47,51 @@
                 </thead>
                 <tbody>
                     @forelse ($players as $player)
-                        <tr wire:key="player-{{ $player->id }}" class="border-b border-neutral-100 dark:border-neutral-800">
+                        <tr wire:key="player-{{ $player->id }}"
+                            class="border-b border-neutral-100 dark:border-neutral-800">
                             <td class="py-2">{{ $players->firstItem() + $loop->index }}</td>
                             @if ($editingPlayerId === $player->id)
                                 <td class="py-2">
-                                    <input
-                                        type="text"
-                                        wire:model.live="editPlayerName"
-                                        class="w-full rounded-md border border-neutral-300 px-2 py-1 dark:border-neutral-600 dark:bg-neutral-900"
-                                    >
+                                    <input type="text" wire:model.live="editPlayerName"
+                                        class="w-full rounded-md border border-neutral-300 px-2 py-1 dark:border-neutral-600 dark:bg-neutral-900">
                                     @error('editPlayerName')
                                         <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                                     @enderror
                                 </td>
                                 <td class="py-2">
-                                    <input
-                                        type="number"
-                                        min="1"
-                                        max="300"
-                                        step="0.1"
+                                    <input type="number" min="1" max="300" step="0.1"
                                         wire:model.live="editShotSpeed"
-                                        class="w-full rounded-md border border-neutral-300 px-2 py-1 dark:border-neutral-600 dark:bg-neutral-900"
-                                    >
+                                        class="w-full rounded-md border  border-neutral-300 px-2 py-1 dark:border-neutral-600 dark:bg-neutral-900">
                                     @error('editShotSpeed')
                                         <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                                     @enderror
                                 </td>
                                 <td class="py-2">
                                     <div class="flex justify-end gap-2">
-                                        <flux:button size="sm" variant="primary" wire:click="updatePlayer({{ $player->id }})" aria-label="Kaydet">
+                                        <flux:button size="sm" variant="primary"
+                                            wire:click="updatePlayer({{ $player->id }})" aria-label="Kaydet">
                                             <flux:icon.check class="size-4" />
                                         </flux:button>
-                                        <flux:button size="sm" variant="ghost" wire:click="cancelEditing" aria-label="Vazgeç">
+                                        <flux:button size="sm" variant="ghost" wire:click="cancelEditing"
+                                            aria-label="Vazgeç">
                                             <flux:icon.x-mark class="size-4" />
                                         </flux:button>
                                     </div>
                                 </td>
                             @else
                                 <td class="py-2">{{ $player->name }}</td>
-                                <td class="py-2">{{ number_format((float) $player->shot_speed_kmh, 1) }}</td>
+                                <td
+                                    class="py-2 @if ((float) $player->shot_speed_kmh >= $averageSpeed) text-green-600 dark:text-green-400 @else text-blue-600 dark:text-blue-400 @endif">
+                                    {{ number_format((float) $player->shot_speed_kmh, 1) }}</td>
                                 <td class="py-2">
                                     <div class="flex justify-end gap-2">
-                                        <flux:button size="sm" variant="ghost" wire:click="startEditing({{ $player->id }})" aria-label="Düzenle">
+                                        <flux:button size="sm" variant="ghost"
+                                            wire:click="startEditing({{ $player->id }})" aria-label="Düzenle">
                                             <flux:icon.pencil-square class="size-4" />
                                         </flux:button>
                                         <flux:button size="sm" variant="danger"
-                                        wire:confirm="Kaydı silmek istediğinize emin misiniz?"
-                                        wire:click="deletePlayer({{ $player->id }})" aria-label="Sil">
+                                            wire:confirm="Kaydı silmek istediğinize emin misiniz?"
+                                            wire:click="deletePlayer({{ $player->id }})" aria-label="Sil">
                                             <flux:icon.trash class="size-4" />
                                         </flux:button>
                                     </div>
@@ -119,6 +107,16 @@
             </table>
         </div>
 
+        @if ($averageSpeed > 0)
+            <div class="mt-4 rounded-lg bg-neutral-50 p-4 dark:bg-neutral-800">
+                <div class="text-center">
+                    <div class="text-sm text-neutral-600 dark:text-neutral-400">Ortalama Şut Hızı</div>
+                    <div class="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
+                        {{ number_format((float) $averageSpeed, 1) }} km/h</div>
+                </div>
+            </div>
+        @endif
+
         <div class="mt-4">
             {{ $players->links() }}
         </div>
@@ -127,25 +125,26 @@
 
 
 <script>
-
-
-document.addEventListener('livewire:initialized', () => {
-    Livewire.on('player-saved', ({ id }) => {
-        // Wait one tick for Livewire to re-render the DOM
-        requestAnimationFrame(() => {
+    document.addEventListener('livewire:initialized', () => {
+        Livewire.on('player-saved', ({
+            id
+        }) => {
+            // Wait one tick for Livewire to re-render the DOM
             requestAnimationFrame(() => {
-                const row = document.querySelector(`[wire\\:key="player-${id}"]`);
-                if (row) {
-                    row.classList.remove('row-flash-in'); // reset if re-triggered
-                    void row.offsetWidth;                 // force reflow
-                    row.classList.add('row-flash-in');
-                    row.addEventListener('animationend', () => {
-                        row.classList.remove('row-flash-in');
-                    }, { once: true });
-                }
+                requestAnimationFrame(() => {
+                    const row = document.querySelector(`[wire\\:key="player-${id}"]`);
+                    if (row) {
+                        row.classList.remove('row-flash-in'); // reset if re-triggered
+                        void row.offsetWidth; // force reflow
+                        row.classList.add('row-flash-in');
+                        row.addEventListener('animationend', () => {
+                            row.classList.remove('row-flash-in');
+                        }, {
+                            once: true
+                        });
+                    }
+                });
             });
         });
     });
-});
-
 </script>
