@@ -89,6 +89,12 @@
                                             wire:click="startEditing({{ $player->id }})" aria-label="Düzenle">
                                             <flux:icon.pencil-square class="size-4" />
                                         </flux:button>
+                                        <a href="{{ route('shot-speed.report', $player) }}" target="_blank"
+                                            rel="noopener noreferrer"
+                                            class="inline-flex items-center justify-center rounded-md border border-neutral-300 bg-white px-2 py-1 text-sm text-neutral-700 transition hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200 dark:hover:bg-neutral-800"
+                                            aria-label="Rapor">
+                                            Rapor
+                                        </a>
                                         <flux:button size="sm" variant="danger"
                                             wire:confirm="Kaydı silmek istediğinize emin misiniz?"
                                             wire:click="deletePlayer({{ $player->id }})" aria-label="Sil">
