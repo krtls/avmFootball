@@ -1,0 +1,5 @@
+<div class="relative mb-6 w-full">
+    <flux:heading size="xl" level="1">{{ __('Ayarlar') }}</flux:heading>
+    <flux:subheading size="lg" class="mb-6">{{ __('Profilinizi ve hesap ayarlarınızı yönetin') }}</flux:subheading>
+    <flux:separator variant="subtle" />
+</div>
